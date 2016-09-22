@@ -17,7 +17,7 @@ env:
 
 before_install: ./features/data/install-magento-database.sh
 install:
-  - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > $HOME/.composer/auth.json
+  - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"eff3b01d337c65b2ebdb456c6cb751fb\",\"password\":\"4f12f1fda10b29bcd02f8508b4c37976\"}}}" > $HOME/.composer/auth.json
   - composer install --prefer-dist
 script:
   - sh -c "if [ '$TEST_SUITE' = 'phpcs' ]; then php vendor/bin/phpcs --standard=PSR2 Model/ Console/ Test/; fi"
