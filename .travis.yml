@@ -18,8 +18,14 @@ env:
 before_install: ./features/data/install-magento-database.sh
 install:
   - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"eff3b01d337c65b2ebdb456c6cb751fb\",\"password\":\"4f12f1fda10b29bcd02f8508b4c37976\"}}}" > $HOME/.composer/auth.json
+#  - composer create-project --stability=beta magento/project-community-edition magento2-demo
+#  - composer require behat/behat
+  - cd Test/Integration
   - composer install --prefer-dist
+  - composer config repositories.foo git https://github.com/${TRAVIS_REPO_SLUG}.git
+  - composer require ctidigital/magento2-configurator:dev-${TRAVIS_BRANCH}
 script:
+  - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then cd vendor/ctidigital/magento2-configurator; fi"
   - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then ls; pwd; ls ../../../app; fi"
   - sh -c "if [ '$TEST_SUITE' = 'unit' ]; then vendor/bin/behat --stop-on-failure --no-snippets --no-interaction; fi"
   - sh -c "if [ '$TEST_SUITE' = 'phpcs' ]; then php vendor/bin/phpcs --standard=PSR2 Model/ Console/ Test/; fi"
