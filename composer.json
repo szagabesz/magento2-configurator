@@ -19,7 +19,9 @@
     "squizlabs/php_codesniffer": "1.5.3",
     "sebastian/phpcpd": "2.0.0",
     "satooshi/php-coveralls": "^1.0",
-    "magento/mtf": "dev-develop"
+    "magento/mtf": "dev-develop",
+    "behat/behat": "^3.1.0",
+    "bex/behat-magento2-init": "^1.0"
   },
   "version": "0.3.1-dev",
   "autoload": {
