@@ -77,14 +77,16 @@ before_script:
 #    - composer require $PULSESTORM_COMPOSER_PACKAGE_TO_TEST dev-master
     - composer config repositories.foo git https://github.com/${TRAVIS_REPO_SLUG}.git
     - composer require ctidigital/magento2-configurator:dev-${TRAVIS_BRANCH}
+    - cd vendor/ctidigital/magento2-configurator
+    - composer require behat/behat
     # run installation command using evn variables set above
     - php bin/magento setup:install --admin-email "$TEST_MAGE2_ADMIN_EMAIL" --admin-firstname "$TEST_MAGE2_ADMIN_FIRST_NAME" --admin-lastname "$TEST_MAGE2_ADMIN_LAST_NAME" --admin-password "$TEST_MAGE2_ADMIN_PASSWORD" --admin-user "$TEST_MAGE2_ADMIN_USERNAME" --backend-frontname admin --base-url "$TEST_MAGE2_FAKE_URL" --db-host 127.0.0.1 --db-name magento_2_travis --db-user root --session-save files --use-rewrites 1 --use-secure 0 -vvv    
     # test that magento is installed
     - curl "$TEST_MAGE2_FAKE_URL/index.php" > /tmp/output.txt
-    # install behat
-    - cd vendor/ctidigital/magento2-configurator
-    - composer require behat/behat
 script:
   - pwd
   - ls
-  - bin/behat --stop-on-failure --no-snippets --no-interaction
+  - ls bin
+  - cd /
+  - find -name behat -type f
+#  - bin/behat --stop-on-failure --no-snippets --no-interaction
