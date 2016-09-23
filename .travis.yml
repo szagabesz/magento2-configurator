@@ -83,4 +83,6 @@ before_script:
     # test that magento is installed
     - curl "$TEST_MAGE2_FAKE_URL/index.php" > /tmp/output.txt
 script:
+  - pwd
+  - ls
   - bin/behat --stop-on-failure --no-snippets --no-interaction
