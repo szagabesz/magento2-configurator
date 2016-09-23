@@ -85,8 +85,5 @@ before_script:
     - curl "$TEST_MAGE2_FAKE_URL/index.php" > /tmp/output.txt
 script:
   - cd vendor/ctidigital/magento2-configurator
-  - pwd
-  - ls
-  - ls ../../behat/behat
   - ../../behat/behat/bin/behat --version
-#  - bin/behat --stop-on-failure --no-snippets --no-interaction
+  - ../../behat/behat/bin/behat --stop-on-failure --no-snippets --no-interaction
