@@ -8,7 +8,7 @@ env:
     - TEST_MAGE2_ADMIN_LAST_NAME=Person
     - TEST_MAGE2_ADMIN_USERNAME=admin            
     - TEST_MAGE2_ADMIN_PASSWORD=admin123
-    - TEST_MAGE2_ADMIN_DBNAME=magentodb                
+    - TEST_MAGE2_ADMIN_DBNAME=magento_2_travis
     - COMPOSER_REPOSITORY_TO_TEST=git@github.com:szagabesz/magento2-configurator.git
     - PULSESTORM_COMPOSER_PACKAGE_TO_TEST=ctidigital/magento2-configurator
 addons:
