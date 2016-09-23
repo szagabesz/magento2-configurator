@@ -49,8 +49,10 @@ class FeatureContext extends BaseFixture implements Context
      */
     public function iMagentoDatabaseShouldHaveTheDesiredWebsitesAndStores()
     {
+        var_dump(__METHOD__);
         /** @var Magento\Store\Model\StoreManagerInterface $storeManager */
         $storeManager = $this->createMagentoObject('Magento\Store\Model\StoreManager');
+        var_dump('$storeManager is a '.get_class($storeManager));
 
         $expectedWebsites = [
             'hu' => 'HU website',

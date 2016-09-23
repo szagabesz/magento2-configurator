@@ -81,6 +81,8 @@ before_script:
     - composer require bex/behat-magento2-init
     # run installation command using evn variables set above
     - php bin/magento setup:install --admin-email "$TEST_MAGE2_ADMIN_EMAIL" --admin-firstname "$TEST_MAGE2_ADMIN_FIRST_NAME" --admin-lastname "$TEST_MAGE2_ADMIN_LAST_NAME" --admin-password "$TEST_MAGE2_ADMIN_PASSWORD" --admin-user "$TEST_MAGE2_ADMIN_USERNAME" --backend-frontname admin --base-url "$TEST_MAGE2_FAKE_URL" --db-host 127.0.0.1 --db-name magento_2_travis --db-user root --session-save files --use-rewrites 1 --use-secure 0 -vvv    
+    - php bin/magento module:enable CtiDigital_Configurator
+    - php bin/magento magento setup:upgrade
     # test that magento is installed
     - curl "$TEST_MAGE2_FAKE_URL/index.php" > /tmp/output.txt
 script:
