@@ -30,7 +30,7 @@ class FeatureContext extends BaseFixture implements Context
         $baseDir = getcwd() . '/../../../';
         var_dump('$baseDir='.$baseDir);
         $command = sprintf(
-            'bin/magento configurator:run --env=%s --component=%s',
+            'php bin/magento configurator:run --env=%s --component=%s',
             escapeshellarg($environment),
             escapeshellarg($component)
         );
