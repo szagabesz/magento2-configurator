@@ -26,7 +26,7 @@ class FeatureContext extends BaseFixture implements Context
      */
     public function iRunTheConfiguratorSCliTool($component, $environment)
     {
-        $baseDir = '../../../';
+        $baseDir = getcwd();
         $command = sprintf(
             'bin/magento configurator:run --env=%s --component=%s',
             escapeshellarg($environment),
