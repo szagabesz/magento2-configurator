@@ -19,6 +19,7 @@ class FeatureContext extends BaseFixture implements Context
     public function iHaveAYamlFileWhichDescribesSomeWebsitesAndStores()
     {
         // file prepared in features/bootstrap/Fixtures/master.yaml
+        return true;
     }
 
     /**
@@ -26,15 +27,12 @@ class FeatureContext extends BaseFixture implements Context
      */
     public function iRunTheConfiguratorSCliTool($component, $environment)
     {
-        var_dump(__METHOD__);
         $baseDir = getcwd() . '/../../../';
-        var_dump('$baseDir='.$baseDir);
         $command = sprintf(
-            'php bin/magento configurator:run --env=%s --component=%s',
+            'php bin/magento configurator:run --env=%s --component=%s -f features/bootstrap/Fixtures/master.yaml',
             escapeshellarg($environment),
             escapeshellarg($component)
         );
-        var_dump('command='.$command);
 
         $importerProcess = new Process($command, $baseDir);
         $importerProcess->run();
@@ -49,10 +47,8 @@ class FeatureContext extends BaseFixture implements Context
      */
     public function iMagentoDatabaseShouldHaveTheDesiredWebsitesAndStores()
     {
-        var_dump(__METHOD__);
         /** @var Magento\Store\Model\StoreManagerInterface $storeManager */
         $storeManager = $this->createMagentoObject('Magento\Store\Model\StoreManager');
-        var_dump('$storeManager is a '.get_class($storeManager));
 
         $expectedWebsites = [
             'hu' => 'HU website',
