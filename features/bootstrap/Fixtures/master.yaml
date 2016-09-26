@@ -2,4 +2,4 @@ websites:
   enabled: 1
   method: code
   sources:
-      - features/Fixtures/websites.yaml
+      - features/bootstrap/Fixtures/websites.yaml
