@@ -6,6 +6,8 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Magento\Framework\App\ObjectManager;
 use Bex\Behat\Magento2InitExtension\Fixtures\BaseFixture;
+use Magento\Store\Model\ScopeInterface as Scope;
+use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfig;
 
 /**
  * Defines application features from the specific context.
@@ -18,8 +20,12 @@ class FeatureContext extends BaseFixture implements Context
      */
     public function iHaveAYamlFileWhichDescribesSomeWebsitesAndStores()
     {
-        // file prepared in features/bootstrap/Fixtures/master.yaml
-        return true;
+        $this->ensureFilesExist(
+            [
+                'features/bootstrap/Fixtures/master.yaml',
+                'features/bootstrap/Fixtures/websites.yaml',
+            ]
+        );
     }
 
     /**
@@ -34,7 +40,7 @@ class FeatureContext extends BaseFixture implements Context
             escapeshellarg($component)
         );
 
-        $importerProcess = new Process($command, $baseDir);
+        $importerProcess = new Process($command, $baseDir, ['XDEBUG_CONFIG' => '']);
         $importerProcess->run();
 
         if (!$importerProcess->isSuccessful()) {
@@ -77,10 +83,150 @@ class FeatureContext extends BaseFixture implements Context
         }
     }
 
+    /**
+     * @Given I have yaml files which describes store configuration for :name environment
+     * @Given I have yaml files which describes store configuration for all environments
+     */
+    public function iHaveYamlFilesWhichDescribesStoreConfigurationForLocalEnvironment($name = false)
+    {
+        $environment = $name ? "$name/" : '';
+
+        $this->ensureFilesExist(
+            [
+                'features/bootstrap/Fixtures/master.yaml',
+                "features/bootstrap/Fixtures/{$environment}global.yaml",
+                "features/bootstrap/Fixtures/{$environment}base-website-config.yaml",
+            ]
+        );
+    }
+
+    /**
+     * @Then Magento database should have the desired configuration applied for local environment
+     */
+    public function magentoDatabaseShouldHaveTheDesiredConfigurationAppliedForLocalEnvironment()
+    {
+        $expectedConfiguration = [
+            'general/country/default' => [
+                ['scope_type' => ScopeConfig::SCOPE_TYPE_DEFAULT, 'scope_code' => '', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'hu', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'uk', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'ch', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'de_ch', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'fr_ch', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'it_ch', 'value' => 'HU'],
+            ],
+            'general/locale/code' => [
+                ['scope_type' => ScopeConfig::SCOPE_TYPE_DEFAULT, 'scope_code' => '', 'value' => 'de_FR'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'hu', 'value' => 'de_FR'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'uk', 'value' => 'de_FR'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'ch', 'value' => 'de_FR'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'de_ch', 'value' => 'de_CH'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'fr_ch', 'value' => 'fr_CH'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'it_ch', 'value' => 'it_CH'],
+            ],
+            'general/store_information/name' => [
+                ['scope_type' => ScopeConfig::SCOPE_TYPE_DEFAULT, 'scope_code' => '', 'value' => 'Defaut store'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'hu', 'value' => 'Hungarian webshop'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'uk', 'value' => 'English store'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'ch', 'value' => 'Defaut store'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'de_ch', 'value' => 'Swiss store in German'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'fr_ch', 'value' => 'Swiss-French store'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'it_ch', 'value' => 'Swiss store in Italian'],
+            ],
+        ];
+
+        $this->ensureConfigurationIsSet($expectedConfiguration);
+    }
+
+    /**
+     * @Then Magento database should have the desired configuration applied for production environment
+     */
+    public function magentoDatabaseShouldHaveTheDesiredConfigurationAppliedForProductionEnvironment()
+    {
+        $expectedConfiguration = [
+            'general/country/default' => [
+                ['scope_type' => ScopeConfig::SCOPE_TYPE_DEFAULT, 'scope_code' => '', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'hu', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'uk', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'ch', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'de_ch', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'fr_ch', 'value' => 'HU'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'it_ch', 'value' => 'HU'],
+            ],
+            'general/locale/code' => [
+                ['scope_type' => ScopeConfig::SCOPE_TYPE_DEFAULT, 'scope_code' => '', 'value' => 'de_CH'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'hu', 'value' => 'de_CH'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'uk', 'value' => 'de_CH'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'ch', 'value' => 'de_CH'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'de_ch', 'value' => 'de_CH'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'fr_ch', 'value' => 'fr_CH'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'it_ch', 'value' => 'it_CH'],
+            ],
+            'general/store_information/name' => [
+                ['scope_type' => ScopeConfig::SCOPE_TYPE_DEFAULT, 'scope_code' => '', 'value' => 'Defaut store'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'hu', 'value' => 'Hungarian store'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'uk', 'value' => 'English webshop'],
+                ['scope_type' => Scope::SCOPE_WEBSITE, 'scope_code' => 'ch', 'value' => 'Defaut store'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'de_ch', 'value' => 'Swiss-German store'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'fr_ch', 'value' => 'Swiss store in Franch'],
+                ['scope_type' => Scope::SCOPE_STORE, 'scope_code' => 'it_ch', 'value' => 'Swiss store in Italian'],
+            ],
+        ];
+
+        $this->ensureConfigurationIsSet($expectedConfiguration);
+    }
+
     protected function _getMagentoBaseDir()
     {
         $dir = $this->createMagentoObject('Magento\App\Dir');
 
         return $dir->getDir();
+    }
+
+    /**
+     * @param array $fileNames
+     *
+     * @throws RuntimeException Thrown when any of the given files does not exist.
+     */
+    protected function ensureFilesExist(array $fileNames)
+    {
+        foreach ($fileNames as $filename) {
+            if (!file_exists($filename)) {
+                throw new RuntimeException('Configuration file does not exist: ' . $filename);
+            }
+        }
+    }
+
+    /**
+     * @param $expectedConfiguration
+     *
+     * @throws DomainException Thrown when the configuration value differs from the expectation.
+     */
+    private function ensureConfigurationIsSet($expectedConfiguration)
+    {
+        /** @var \Magento\Framework\App\Config\ScopePool $scopePool */
+        $scopePool = $this->getObjectManager()->get('Magento\Framework\App\Config\ScopePool');
+        $scopePool->clean();
+
+        /** @var \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig */
+        $scopeConfig = $this->createMagentoObject('Magento\Framework\App\Config\ScopeConfigInterface');
+
+        foreach ($expectedConfiguration as $path => $configs) {
+            foreach ($configs as $config) {
+                $value = $scopeConfig->getValue($path, $config['scope_type'], $config['scope_code']);
+                if ($value !== $config['value']) {
+                    throw new DomainException(
+                        sprintf(
+                            'Configuration value for "%s" under scope %s(%s) expected to be "%s", but got "%s".',
+                            $path,
+                            $config['scope_type'],
+                            $config['scope_code'],
+                            $config['value'],
+                            $value
+                        )
+                    );
+                }
+            }
+        }
     }
 }

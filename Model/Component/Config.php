@@ -22,7 +22,7 @@ class Config extends ComponentAbstract
     protected $configResource;
 
     /**
-     * @var \Magento\Framework\App\Config
+     * @var ConfigInterface
      */
     protected $scopeConfig;
 
@@ -114,11 +114,6 @@ class Config extends ComponentAbstract
 
             // Check existing value, skip if the same
             $scope = \Magento\Framework\App\Config\ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
-            $existingValue = $this->scopeConfig->getValue($path, $scope);
-            if ($value == $existingValue) {
-                $this->log->logComment(sprintf("Global Config Already: %s = %s", $path, $value));
-                return;
-            }
 
             // Save the config
             $this->configResource->saveConfig($path, $value, $scope, 0);
@@ -148,13 +143,6 @@ class Config extends ComponentAbstract
                 throw new ComponentException(sprintf("There is no website with the code '%s'", $code));
             }
 
-            // Check existing value, skip if the same
-            $existingValue = $this->scopeConfig->getValue($path, $scope, $code);
-            if ($value == $existingValue) {
-                $this->log->logComment(sprintf("Website '%s' Config Already: %s = %s", $code, $path, $value), $logNest);
-                return;
-            }
-
             // Save the config
             $this->configResource->saveConfig($path, $value, $scope, $website->getId());
             $this->log->logInfo(sprintf("Website '%s' Config: %s = %s", $code, $path, $value), $logNest);
@@ -180,13 +168,6 @@ class Config extends ComponentAbstract
             $storeView->load($code, 'code');
             if (!$storeView->getId()) {
                 throw new ComponentException(sprintf("There is no store view with the code '%s'", $code));
-            }
-
-            // Check existing value, skip if the same
-            $existingValue = $this->scopeConfig->getValue($path, $scope, $code);
-            if ($value == $existingValue) {
-                $this->log->logComment(sprintf("Store '%s' Config Already: %s = %s", $code, $path, $value), $logNest);
-                return;
             }
 
             $this->configResource->saveConfig($path, $value, $scope, $storeView->getId());
