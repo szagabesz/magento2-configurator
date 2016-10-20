@@ -40,7 +40,8 @@ class FeatureContext extends BaseFixture implements Context
             escapeshellarg($component)
         );
 
-        $importerProcess = new Process($command, $baseDir, ['XDEBUG_CONFIG' => '']);
+        $shellEnvironment = array_merge($_ENV, ['XDEBUG_CONFIG' => '']);
+        $importerProcess = new Process($command, $baseDir, $shellEnvironment);
         $importerProcess->run();
 
         if (!$importerProcess->isSuccessful()) {
