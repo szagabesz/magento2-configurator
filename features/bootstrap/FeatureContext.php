@@ -35,7 +35,7 @@ class FeatureContext extends BaseFixture implements Context
     {
         $baseDir = getcwd() . '/../../../';
         $command = sprintf(
-            'php bin/magento configurator:run --env=%s --component=%s -f features/bootstrap/Fixtures/master.yaml',
+            'php bin/magento configurator:run -vvv --env=%s --component=%s -f features/bootstrap/Fixtures/master.yaml',
             escapeshellarg($environment),
             escapeshellarg($component)
         );
