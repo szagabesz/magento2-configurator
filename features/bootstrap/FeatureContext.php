@@ -44,7 +44,9 @@ class FeatureContext extends BaseFixture implements Context
         $importerProcess->run();
 
         if (!$importerProcess->isSuccessful()) {
-            throw new \RuntimeException($command . ' failed: ' . $importerProcess->getOutput());
+            throw new \RuntimeException(
+                $command . ' failed: ' . $importerProcess->getOutput() . $importerProcess->getErrorOutput()
+            );
         }
     }
 
