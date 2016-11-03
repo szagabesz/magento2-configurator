@@ -2,6 +2,7 @@
 
 namespace CtiDigital\Configurator\Model\Component;
 
+use CtiDigital\Configurator\Model\Exception\CommandFailedException;
 use CtiDigital\Configurator\Model\Exception\ComponentException;
 use Magento\Store\Model\Group;
 use Magento\Store\Model\GroupFactory;
@@ -49,6 +50,7 @@ class Websites extends ComponentAbstract
             return $parser->parse(file_get_contents($source));
         } catch (ComponentException $e) {
             $this->log->logError($e->getMessage());
+            throw new CommandFailedException();
         }
     }
 
@@ -90,6 +92,7 @@ class Websites extends ComponentAbstract
             }
         } catch (ComponentException $e) {
             $this->log->logError($e->getMessage());
+            throw new CommandFailedException();
         }
     }
 
@@ -164,6 +167,7 @@ class Websites extends ComponentAbstract
             return $website;
         } catch (ComponentException $e) {
             $this->log->logError($e->getMessage(), $logNest);
+            throw new CommandFailedException();
         }
     }
 
@@ -256,6 +260,7 @@ class Websites extends ComponentAbstract
             return $storeGroup;
         } catch (ComponentException $e) {
             $this->log->logError($e->getMessage(), $logNest);
+            throw new CommandFailedException();
         }
     }
 
@@ -340,6 +345,7 @@ class Websites extends ComponentAbstract
             return $storeView;
         } catch (ComponentException $e) {
             $this->log->logError($e->getMessage(), $logNest);
+            throw new CommandFailedException();
         }
     }
 
@@ -398,6 +404,7 @@ class Websites extends ComponentAbstract
 
         } catch (ComponentException $e) {
             $this->log->logError($e->getMessage(), $logNest);
+            throw new CommandFailedException();
         }
     }
 }
