@@ -14,6 +14,18 @@ use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfig;
  */
 class FeatureContext extends BaseFixture implements Context
 {
+    /** @var string Path to PHP executable */
+    private $phpBin;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $finder = new PhpExecutableFinder();
+        if (($this->phpBin = $finder->find()) === false) {
+            throw new \RuntimeException('Unable to find PHP executable.');
+        }
+    }
 
     /**
      * @Given I have a yaml file which describes some websites and stores
@@ -35,14 +47,13 @@ class FeatureContext extends BaseFixture implements Context
     {
         $baseDir = getcwd() . '/../../../';
         $command = sprintf(
-            'php bin/magento configurator:run -vvv --env=%s --component=%s -f features/bootstrap/Fixtures/master.yaml',
+            '%s bin/magento configurator:run -vvv --env=%s --component=%s -f features/bootstrap/Fixtures/master.yaml',
+            $this->phpBin,
             escapeshellarg($environment),
             escapeshellarg($component)
         );
 
         $shellEnvironment = array_merge($_ENV, ['XDEBUG_CONFIG' => '']);
-        var_dump('shell env:');
-        var_dump($shellEnvironment);
         $importerProcess = new Process($command, $baseDir, $shellEnvironment);
         $importerProcess->run();
 
