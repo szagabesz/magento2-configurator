@@ -91,4 +91,5 @@ before_script:
     - curl "$TEST_MAGE2_FAKE_URL/index.php" > /tmp/output.txt
 script:
   - cd vendor/ctidigital/magento2-configurator
+  - printenv
   - ../../behat/behat/bin/behat -v --stop-on-failure --no-snippets --no-interaction

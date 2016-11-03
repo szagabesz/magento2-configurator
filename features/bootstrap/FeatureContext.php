@@ -41,6 +41,8 @@ class FeatureContext extends BaseFixture implements Context
         );
 
         $shellEnvironment = array_merge($_ENV, ['XDEBUG_CONFIG' => '']);
+        var_dump('shell env:');
+        var_dump($shellEnvironment);
         $importerProcess = new Process($command, $baseDir, $shellEnvironment);
         $importerProcess->run();
 
